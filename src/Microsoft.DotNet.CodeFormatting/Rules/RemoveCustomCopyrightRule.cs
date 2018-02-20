@@ -4,32 +4,28 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace Microsoft.DotNet.CodeFormatting.Rules
 {
-    [SyntaxRule(HasNoCustomCopyrightHeaderFormattingRule.Name, HasNoCustomCopyrightHeaderFormattingRule.Description, SyntaxRuleOrder.HasNoCustomCopyrightHeaderFormattingRule)]
-    internal sealed class HasNoCustomCopyrightHeaderFormattingRule : CSharpOnlyFormattingRule, ISyntaxFormattingRule
+    [SyntaxRule(Name = RemoveCustomCopyrightRule.Name, Description = RemoveCustomCopyrightRule.Description, Order = SyntaxRuleOrder.HasNoCustomCopyrightHeaderFormattingRule)]
+    internal sealed class RemoveCustomCopyrightRule : CSharpOnlyFormattingRule, ISyntaxFormattingRule
     {
-        internal const string Name = "CustomCopyright";
+        internal const string Name = "RemoveCustomCopyright";
         internal const string Description = "Remove any custom copyright header from the file";
 
         private static string RulerMarker { get; set; }
         private static string StartMarker { get; set; }
         private static string EndMarker { get; set; }
 
-        private readonly Options _options;
+        private readonly FormattingOptions _options;
 
-        [ImportingConstructor]
-        internal HasNoCustomCopyrightHeaderFormattingRule(Options options)
+        public RemoveCustomCopyrightRule(FormattingOptions options)
         {
             _options = options;
         }

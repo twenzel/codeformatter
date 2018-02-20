@@ -4,16 +4,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Collections.Immutable;
+using System.Linq;
+
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.DotNet.CodeFormatting.Rules
 {
-    [SyntaxRule(CopyrightHeaderRule.Name, CopyrightHeaderRule.Description, SyntaxRuleOrder.CopyrightHeaderRule, DefaultRule=false)]
+    [SyntaxRule(Name = CopyrightHeaderRule.Name, Description = CopyrightHeaderRule.Description, Order = SyntaxRuleOrder.CopyrightHeaderRule)]
     internal sealed partial class CopyrightHeaderRule : SyntaxFormattingRule, ISyntaxFormattingRule
     {
         internal const string Name = FormattingDefaults.CopyrightRuleName;
@@ -165,12 +163,11 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
             protected abstract SyntaxTrivia CreateNewLine();
         }
 
-        private readonly Options _options;
+        private readonly FormattingOptions _options;
         private ImmutableArray<string> _cachedHeader;
         private ImmutableArray<string> _cachedHeaderSource;
 
-        [ImportingConstructor]
-        internal CopyrightHeaderRule(Options options)
+        public CopyrightHeaderRule(FormattingOptions options)
         {
             _options = options;
         }

@@ -2,16 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.DotNet.CodeFormatting;
+
 using Xunit;
 
 namespace Microsoft.DotNet.CodeFormatting.Tests
@@ -20,6 +18,7 @@ namespace Microsoft.DotNet.CodeFormatting.Tests
     {
         private static readonly MetadataReference s_CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
         private static readonly MetadataReference s_SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
+        private static readonly MetadataReference s_SystemCollectionsImmutableReference = MetadataReference.CreateFromFile(typeof(ImmutableArray).Assembly.Location);
         private static readonly MetadataReference s_CodeFormatterReference = MetadataReference.CreateFromFile(typeof(IFormattingEngine).Assembly.Location);
 
         private const string FileNamePrefix = "Test";
@@ -32,14 +31,17 @@ namespace Microsoft.DotNet.CodeFormatting.Tests
             yield return s_CorlibReference;
             yield return s_SystemCoreReference;
             yield return s_CodeFormatterReference;
+            yield return s_SystemCollectionsImmutableReference;
         }
 
-        private Solution CreateSolution(string[] sources, string language = LanguageNames.CSharp)
+        private Workspace CreateWorkspace(string[] sources, string language = LanguageNames.CSharp)
         {
             string fileExtension = language == LanguageNames.CSharp ? CSharpFileExtension : VBFileExtension;
             var projectId = ProjectId.CreateNewId(TestProjectName);
 
-            var solution = new AdhocWorkspace()
+            var workspace = new AdhocWorkspace();
+
+            var solution = workspace
                 .CurrentSolution
                 .AddProject(projectId, TestProjectName, TestProjectName, language)
                 .AddMetadataReferences(projectId, GetSolutionMetadataReferences());
@@ -53,27 +55,12 @@ namespace Microsoft.DotNet.CodeFormatting.Tests
                 count++;
             }
 
-            return solution;
+            workspace.TryApplyChanges(solution);
+
+            return workspace;
         }
 
-        private async Task<Solution> Format(Solution solution, bool runFormatter)
-        {
-            var documentIds = solution.Projects.SelectMany(p => p.DocumentIds);
-
-            foreach (var id in documentIds)
-            {
-                var document = solution.GetDocument(id);
-                document = await RewriteDocumentAsync(document);
-                if (runFormatter)
-                {
-                    document = await Formatter.FormatAsync(document);
-                }
-
-                solution = document.Project.Solution;
-            }
-
-            return solution;
-        }
+        protected abstract Task<Solution> Format(Solution solution, bool runFormatter);
 
         private void AssertSolutionEqual(Solution expectedSolution, Solution actualSolution)
         {
@@ -92,67 +79,21 @@ namespace Microsoft.DotNet.CodeFormatting.Tests
             }
         }
 
-        protected abstract Task<Document> RewriteDocumentAsync(Document document);
-
         protected void Verify(string[] sources, string[] expected, bool runFormatter, string languageName)
         {
-            var inputSolution = CreateSolution(sources, languageName);
-            var expectedSolution = CreateSolution(expected, languageName);
-            var actualSolution = Format(inputSolution, runFormatter).Result;
+            var inputWorkspace = CreateWorkspace(sources, languageName);
+            var expectedWorkspace = CreateWorkspace(expected, languageName);
+            var actualSolution = Format(inputWorkspace.CurrentSolution, runFormatter).Result;
 
             if (actualSolution == null)
                 Assert.False(true, "Solution is null. Test Failed.");
 
-            AssertSolutionEqual(expectedSolution, actualSolution);
+            AssertSolutionEqual(expectedWorkspace.CurrentSolution, actualSolution);
         }
 
         protected void Verify(string source, string expected, bool runFormatter = true, string languageName = LanguageNames.CSharp)
         {
             Verify(new string[] { source }, new string[] { expected }, runFormatter, languageName);
-        }
-    }
-
-    public abstract class SyntaxRuleTestBase : CodeFormattingTestBase
-    {
-        internal abstract ISyntaxFormattingRule Rule
-        {
-            get;
-        }
-
-        protected override async Task<Document> RewriteDocumentAsync(Document document)
-        {
-            var syntaxRoot = await document.GetSyntaxRootAsync();
-            syntaxRoot = Rule.Process(syntaxRoot, document.Project.Language);
-            return document.WithSyntaxRoot(syntaxRoot);
-        }
-    }
-
-    public abstract class LocalSemanticRuleTestBase : CodeFormattingTestBase
-    {
-        internal abstract ILocalSemanticFormattingRule Rule
-        {
-            get;
-        }
-
-        protected override async Task<Document> RewriteDocumentAsync(Document document)
-        {
-            var syntaxRoot = await document.GetSyntaxRootAsync();
-            syntaxRoot = await Rule.ProcessAsync(document, syntaxRoot, CancellationToken.None);
-            return document.WithSyntaxRoot(syntaxRoot);
-        }
-    }
-
-    public abstract class GlobalSemanticRuleTestBase : CodeFormattingTestBase
-    {
-        internal abstract IGlobalSemanticFormattingRule Rule
-        {
-            get;
-        }
-
-        protected override async Task<Document> RewriteDocumentAsync(Document document)
-        {
-            var solution = await Rule.ProcessAsync(document, await document.GetSyntaxRootAsync(), CancellationToken.None);
-            return solution.GetDocument(document.Id);
         }
     }
 }

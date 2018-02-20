@@ -2,12 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -15,7 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.DotNet.CodeFormatting.Rules
 {
-    [SyntaxRule(NonAsciiCharactersAreEscapedInLiterals.Name, NonAsciiCharactersAreEscapedInLiterals.Description, SyntaxRuleOrder.NonAsciiChractersAreEscapedInLiterals)]
+    [SyntaxRule(Name = NonAsciiCharactersAreEscapedInLiterals.Name, Description = NonAsciiCharactersAreEscapedInLiterals.Description, Order = SyntaxRuleOrder.NonAsciiChractersAreEscapedInLiterals)]
     internal sealed class NonAsciiCharactersAreEscapedInLiterals : CSharpOnlyFormattingRule, ISyntaxFormattingRule
     {
         internal const string Name = FormattingDefaults.UnicodeLiteralsRuleName;

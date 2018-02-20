@@ -3,23 +3,17 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.DotNet.CodeFormatting.Filters
 {
-    [Export(typeof(IFormattingFilter))]
     internal sealed class FilenameFilter : IFormattingFilter
     {
-        private readonly Options _options;
+        private readonly FormattingOptions _options;
 
-        [ImportingConstructor]
-        public FilenameFilter(Options options)
+        public FilenameFilter(FormattingOptions options)
         {
             _options = options;
         }

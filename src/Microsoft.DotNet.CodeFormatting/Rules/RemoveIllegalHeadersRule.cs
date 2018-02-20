@@ -2,11 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,12 +11,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+
 namespace Microsoft.DotNet.CodeFormatting.Rules
 {
-    [LocalSemanticRule(HasNoIllegalHeadersFormattingRule.Name, HasNoIllegalHeadersFormattingRule.Description, LocalSemanticRuleOrder.HasNoIllegalHeadersFormattingRule)]
-    internal sealed class HasNoIllegalHeadersFormattingRule : CSharpOnlyFormattingRule, ILocalSemanticFormattingRule
+    [LocalSemanticRule(Name = HasNoIllegalHeadersRule.Name, Description = HasNoIllegalHeadersRule.Description, Order = LocalSemanticRuleOrder.HasNoIllegalHeadersFormattingRule)]
+    internal sealed class HasNoIllegalHeadersRule : CSharpOnlyFormattingRule, ILocalSemanticFormattingRule
     {
-        internal const string Name = "IllegalHeaders";
+        internal const string Name = "RemoveIllegalHeaders";
         internal const string Description = "Remove illegal headers from files";
 
         // We are going to replace this header with the actual filename of the document being processed

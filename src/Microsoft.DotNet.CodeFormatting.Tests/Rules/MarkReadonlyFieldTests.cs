@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
+using System.Composition;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
@@ -269,7 +269,7 @@ class C
         public void TestIgnoredImportedField()
         {
             string text = @"
-using System.ComponentModel.Composition;
+using System.Composition;
 
 public interface ITest
 {
@@ -385,6 +385,62 @@ class C2
             Verify(Original(text), Readonly(text), true, LanguageNames.CSharp);
         }
 
+        [Fact]
+        public void MarkReadOnlyDoNotAnalyzeVisualBasicCode()
+        {
+            string text = @"
+Namespace MarkReadOnlyTests
+    Public NotInheritable Class MyTest
+        Shared s_instance As MyTest = New MyTest()
+    End Class
+End Namespace";
+
+            string expected = Original(text);
+            Verify(expected, expected, languageName: LanguageNames.VisualBasic);
+        }
+
+        [Fact]
+        public void MarkReadOnlyFieldIncrementFieldWithinUnsafeBlock()
+        {
+            string text = @"
+public class Test
+{
+    private uint _prefixCount;
+    private uint _postfixCount;
+    public void Add(int item)
+    {
+        unchecked
+        {
+            ++_prefixCount;
+            _postfixCount++;
+        }
+        System.Console.WriteLine(~_prefixCount);
+        System.Console.WriteLine(~_postfixCount);
+    }
+}";
+            Verify(text, text);
+        }
+
+        [Fact]
+        public void MarkReadOnlyFieldNonMutatingUnaryOperators()
+        {
+            string text = @"
+public class Test
+{
+    private READONLY uint _prefixCount;
+    private READONLY bool _flag;
+    public void Add(int item)
+    {
+        System.Console.WriteLine((int)_prefixCount);
+        System.Console.WriteLine(-_prefixCount);
+        System.Console.WriteLine(+_prefixCount);
+        System.Console.WriteLine(~_prefixCount);
+        System.Console.WriteLine(!_flag);
+    }
+}";
+            Verify(Original(text), Readonly(text));
+        }
+   
         private static string Original(string text)
         {
             return text.Replace("READONLY ", "");

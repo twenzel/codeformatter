@@ -3,11 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +12,7 @@ using Microsoft.CodeAnalysis.Rename;
 
 namespace Microsoft.DotNet.CodeFormatting.Rules
 {
-    [GlobalSemanticRule(PrivateFieldNamingRule.Name, PrivateFieldNamingRule.Description, GlobalSemanticRuleOrder.PrivateFieldNamingRule)]
+    [GlobalSemanticRule(Name = PrivateFieldNamingRule.Name, Description = PrivateFieldNamingRule.Description, Order = GlobalSemanticRuleOrder.PrivateFieldNamingRule)]
     internal partial class PrivateFieldNamingRule : IGlobalSemanticFormattingRule
     {
         internal const string Name = "FieldNames";

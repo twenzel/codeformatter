@@ -2,50 +2,84 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Linq;
-using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition;
-using System.Collections.Generic;
-using Microsoft.DotNet.CodeFormatting.Rules;
-using Microsoft.DotNet.CodeFormatting.Filters;
 using System.Collections.Immutable;
+using System.Composition.Convention;
+using System.Composition.Hosting;
+
+using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
+using System.Reflection;
+using Microsoft.CodeAnalysis.Options;
 
 namespace Microsoft.DotNet.CodeFormatting
 {
     public static class FormattingEngine
     {
-        public static IFormattingEngine Create()
+        public static IFormattingEngine Create(IEnumerable<Assembly> assemblies = null)
         {
-            var container = CreateCompositionContainer();
-            var engine = container.GetExportedValue<IFormattingEngine>();
+            var container = CreateCompositionContainer(assemblies);
+            var engine = container.GetExport<IFormattingEngine>();
             var consoleFormatLogger = new ConsoleFormatLogger();
             return engine;
         }
 
-        public static List<IRuleMetadata> GetFormattingRules()
+        public static ImmutableArray<IRuleMetadata> GetFormattingRules(IEnumerable<Assembly> assemblies = null)
         {
-            var container = CreateCompositionContainer();
-            var list = new List<IRuleMetadata>();
-            AppendRules<ISyntaxFormattingRule>(list, container);
-            AppendRules<ILocalSemanticFormattingRule>(list, container);
-            AppendRules<IGlobalSemanticFormattingRule>(list, container);
-            return list;
+            var container = CreateCompositionContainer(assemblies);
+            var engine = container.GetExport<IFormattingEngine>();
+            return engine.AllRules;
         }
 
-        private static void AppendRules<T>(List<IRuleMetadata> list, CompositionContainer container)
-            where T : IFormattingRule
+        public static ImmutableArray<DiagnosticDescriptor> GetSupportedDiagnostics(IEnumerable<Assembly> assemblies)
         {
-            foreach (var rule in container.GetExports<T, IRuleMetadata>())
-            {
-                list.Add(rule.Metadata);
-            }
+            var container = CreateCompositionContainer(assemblies);
+            var engine = container.GetExport<IFormattingEngine>();
+            return engine.AllSupportedDiagnostics;
         }
 
-        private static CompositionContainer CreateCompositionContainer()
+        public static ImmutableArray<IOptionsProvider> GetOptionsProviders(IEnumerable<Assembly> assemblies)
         {
-            var catalog = new AssemblyCatalog(typeof(FormattingEngine).Assembly);
-            return new CompositionContainer(catalog);
+            var container = CreateCompositionContainer(assemblies);
+            return container.GetExports<IOptionsProvider>().ToImmutableArray();
+        }
+
+        private static CompositionHost CreateCompositionContainer(IEnumerable<Assembly> assemblies = null)
+        {
+            ConventionBuilder conventions = GetConventions();
+
+            assemblies = assemblies ?? new Assembly[] { typeof(FormattingEngine).Assembly };
+
+            return new ContainerConfiguration()
+                .WithAssemblies(assemblies, conventions)
+                .CreateContainer();
+        }
+
+        private static ConventionBuilder GetConventions()
+        {
+            var conventions = new ConventionBuilder();
+
+            conventions.ForTypesDerivedFrom<IFormattingFilter>()
+                .Export<IFormattingFilter>();
+
+            conventions.ForTypesDerivedFrom<ISyntaxFormattingRule>()
+                .Export<ISyntaxFormattingRule>();
+            conventions.ForTypesDerivedFrom<ILocalSemanticFormattingRule>()
+                .Export<ILocalSemanticFormattingRule>();
+            conventions.ForTypesDerivedFrom<IGlobalSemanticFormattingRule>()
+                .Export<IGlobalSemanticFormattingRule>();
+            // New per-analyzer options mechanism, deriving
+            // from VS Workspaces functionality 
+            conventions.ForTypesDerivedFrom<IOptionsProvider>()
+                                        .Export<IOptionsProvider>();
+
+            // Legacy CodeFormatter rules options mechanism
+            conventions.ForType<FormattingOptions>()
+                .Export();
+
+            conventions.ForTypesDerivedFrom<IFormattingEngine>()
+                .Export<IFormattingEngine>();
+
+            return conventions;
         }
     }
 }

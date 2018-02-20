@@ -2,24 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Microsoft.CodeAnalysis;
 
 namespace Microsoft.DotNet.CodeFormatting.Filters
 {
-    [Export(typeof(IFormattingFilter))]
     internal sealed class UsableFileFilter : IFormattingFilter
     {
-        private readonly Options _options;
+        private readonly FormattingOptions _options;
 
-        [ImportingConstructor]
-        internal UsableFileFilter(Options options)
+        public UsableFileFilter(FormattingOptions options)
         {
             _options = options;
         }

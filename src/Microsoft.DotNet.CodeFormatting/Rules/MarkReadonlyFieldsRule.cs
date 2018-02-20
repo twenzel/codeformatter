@@ -17,10 +17,10 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
     /// <summary>
     /// Mark any fields that can provably be marked as readonly.
     /// </summary>
-    [GlobalSemanticRule(MarkReadonlyFieldsRule.Name, MarkReadonlyFieldsRule.Description, GlobalSemanticRuleOrder.MarkReadonlyFieldsRule, DefaultRule = false)]
+    [GlobalSemanticRule(Name = MarkReadonlyFieldsRule.Name, Description = MarkReadonlyFieldsRule.Description, Order = GlobalSemanticRuleOrder.MarkReadonlyFieldsRule, DefaultRule = false)]
     internal sealed class MarkReadonlyFieldsRule : IGlobalSemanticFormattingRule
     {
-        internal const string Name = "ReadonlyFields";
+        internal const string Name = "MarkReadonlyFields";
         internal const string Description = "Mark fields which can be readonly as readonly";
 
         private readonly SemaphoreSlim _processUsagesLock = new SemaphoreSlim(1, 1);
@@ -96,8 +96,8 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
         {
             private static readonly HashSet<string> s_serializingFieldAttributes = new HashSet<string>
             {
-                "System.ComponentModel.Composition.ImportAttribute",
-                "System.ComponentModel.Composition.ImportManyAttribute",
+                "System.Composition.ImportAttribute",
+                "System.Composition.ImportManyAttribute",
             };
 
             private readonly HashSet<IFieldSymbol> _fields = new HashSet<IFieldSymbol>();
@@ -116,6 +116,11 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
                 Document document,
                 CancellationToken cancellationToken)
             {
+                if (document.Project.Language != LanguageNames.CSharp)
+                {
+                    return new HashSet<IFieldSymbol>();
+                }
+
                 var scanner = new WritableFieldScanner(
                     await document.GetSemanticModelAsync(cancellationToken));
                 scanner.Visit(await document.GetSyntaxRootAsync(cancellationToken));
@@ -248,6 +253,36 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
                 base.VisitAssignmentExpression(node);
 
                 CheckForFieldWrite(node.Left);
+            }
+
+            public override void VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
+            {
+                base.VisitPostfixUnaryExpression(node);
+
+                switch (node.OperatorToken.Kind())
+                {
+                    case SyntaxKind.MinusMinusToken:
+                    case SyntaxKind.PlusPlusToken:
+                    {
+                        CheckForFieldWrite(node.Operand);
+                        break;
+                    }
+                }
+            }
+
+            public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
+            {
+                base.VisitPrefixUnaryExpression(node);
+
+                switch (node.OperatorToken.Kind())
+                {
+                    case SyntaxKind.MinusMinusToken:
+                    case SyntaxKind.PlusPlusToken:
+                    {
+                        CheckForFieldWrite(node.Operand);
+                        break;
+                    }
+                }
             }
 
             public override void VisitBinaryExpression(BinaryExpressionSyntax node)
@@ -419,6 +454,11 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
                 ConcurrentDictionary<IFieldSymbol, bool> writableFields,
                 CancellationToken cancellationToken)
             {
+                if (document.Project.Language != LanguageNames.CSharp)
+                {
+                    return;
+                }
+
                 var scanner = new WriteUsagesScanner(
                     await document.GetSemanticModelAsync(cancellationToken),
                     writableFields);

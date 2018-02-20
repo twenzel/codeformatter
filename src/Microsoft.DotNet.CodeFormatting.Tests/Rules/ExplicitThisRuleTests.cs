@@ -2,11 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.DotNet.CodeFormatting.Tests
@@ -18,11 +13,7 @@ namespace Microsoft.DotNet.CodeFormatting.Tests
             get { return new Rules.ExplicitThisRule(); }
         }
 
-        [Fact]
-        public void TestFieldUse()
-        {
-            var text = @"
-class C1
+        public const string TestFieldUse_Input = @"class C1
 {
     int _field1;
     string _field2;
@@ -42,8 +33,7 @@ class C1
 }
 ";
 
-            var expected = @"
-class C1
+        public const string TestFieldUse_Expected = @"class C1
 {
     int _field1;
     string _field2;
@@ -62,14 +52,14 @@ class C1
     }
 }
 ";
-            Verify(text, expected, runFormatter: false);
-        }
 
         [Fact]
-        public void TestFieldAssignment()
+        public void TestFieldUse()
         {
-            var text = @"
-class C1
+            Verify(TestFieldUse_Input, TestFieldUse_Expected, runFormatter: false);
+        }
+
+        public const string TestFieldAssignment_Input = @"class C1
 {
     int _field1;
     string _field2;
@@ -84,8 +74,7 @@ class C1
 }
 ";
 
-            var expected = @"
-class C1
+        public const string TestFieldAssignment_Expected = @"class C1
 {
     int _field1;
     string _field2;
@@ -99,14 +88,14 @@ class C1
     }
 }
 ";
-            Verify(text, expected, runFormatter: false);
-        }
 
         [Fact]
-        public void TestFieldAssignmentWithTrivia()
+        public void TestFieldAssignment()
         {
-            var text = @"
-class C1
+            Verify(TestFieldAssignment_Input, TestFieldAssignment_Expected, runFormatter: false);
+        }
+
+        public const string TestFieldAssignmentWithTrivia_Input = @"class C1
 {
     int _field;
 
@@ -120,8 +109,10 @@ class C1
 }
 ";
 
-            var expected = @"
-class C1
+        // The rule-based version behaves differently from the analyzer/fixer-based version
+        // because the analyzer/fixer-based version always applies formatting -- at least
+        // for now.
+        public const string TestFieldAssignmentWithTrivia_Expected = @"class C1
 {
     int _field;
 
@@ -134,38 +125,35 @@ class C1
     }
 }
 ";
-            Verify(text, expected, runFormatter: false);
-        }
 
         [Fact]
-        public void TestFieldBadName()
+        public void TestFieldAssignmentWithTrivia()
         {
-            var text = @"
-class C1
-{
-    int _field;
-
-    void M()
-    {
-        // Not a valid field access, can't reliably remove this.
-        this.field1 = 0;
-    }
-}
-";
-
-            var expected = @"
-class C1
-{
-    int _field;
-
-    void M()
-    {
-        // Not a valid field access, can't reliably remove this.
-        this.field1 = 0;
-    }
-}
-";
-            Verify(text, expected, runFormatter: false);
+            Verify(TestFieldAssignmentWithTrivia_Input, TestFieldAssignmentWithTrivia_Expected, runFormatter: false);
         }
+
+        public const string TestFieldBadName_Input = @"class C1
+{
+    int _field;
+
+    void M()
+    {
+        // Not a valid field access, can't reliably remove this.
+        this.field1 = 0;
+    }
+}
+";
+
+        public const string TestFieldBadName_Expected = @"class C1
+{
+    int _field;
+
+    void M()
+    {
+        // Not a valid field access, can't reliably remove this.
+        this.field1 = 0;
+    }
+}
+";
     }
 }

@@ -2,21 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Composition;
 
 namespace Microsoft.DotNet.CodeFormatting
 {
     /// <summary>
     /// This is a MEF importable type which contains all of the options for formatting
     /// </summary>
-    [Export(typeof(Options))]
-    internal sealed class Options
+    [Shared]
+    internal sealed class FormattingOptions
     {
         internal ImmutableArray<string> CopyrightHeader { get; set; }
         internal ImmutableArray<string[]> PreprocessorConfigurations { get; set; }
@@ -28,8 +23,7 @@ namespace Microsoft.DotNet.CodeFormatting
 
         internal IFormatLogger FormatLogger { get; set; }
 
-        [ImportingConstructor]
-        internal Options()
+        public FormattingOptions()
         {
             CopyrightHeader = FormattingDefaults.DefaultCopyrightHeader;
             FileNames = ImmutableArray<string>.Empty;

@@ -2,22 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.ComponentModel;
-
 namespace Microsoft.DotNet.CodeFormatting
 {
     public interface IRuleMetadata
     {
-        [DefaultValue("")]
-        string Name { get; }
+        string Name { get; set; }
 
-        [DefaultValue("")]
-        string Description { get; }
+        string Description { get; set; }
 
-        [DefaultValue(int.MaxValue)]
-        int Order { get; }
+        int Order { get; set; }
 
-        [DefaultValue(true)]
-        bool DefaultRule { get; }
+        bool DefaultRule { get; set; }
     }
 }

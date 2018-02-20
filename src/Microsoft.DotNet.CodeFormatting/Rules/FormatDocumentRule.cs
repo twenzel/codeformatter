@@ -3,30 +3,26 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.ComponentModel.Composition;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.CSharp;
-using System.Linq;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Microsoft.DotNet.CodeFormatting.Rules
 {
-    [LocalSemanticRule(FormatDocumentFormattingRule.Name, FormatDocumentFormattingRule.Description, LocalSemanticRuleOrder.IsFormattedFormattingRule)]
-    internal sealed class FormatDocumentFormattingRule : ILocalSemanticFormattingRule
+    [LocalSemanticRule(Name = FormatDocumentRule.Name, Description = FormatDocumentRule.Description, Order = LocalSemanticRuleOrder.IsFormattedFormattingRule)]
+    internal sealed class FormatDocumentRule : ILocalSemanticFormattingRule
     {
         internal const string Name = "FormatDocument";
         internal const string Description = "Run the language specific formatter on every document";
-        private readonly Options _options;
+        private readonly FormattingOptions _options;
 
-        [ImportingConstructor]
-        internal FormatDocumentFormattingRule(Options options)
+        public FormatDocumentRule(FormattingOptions options)
         {
             _options = options;
         }

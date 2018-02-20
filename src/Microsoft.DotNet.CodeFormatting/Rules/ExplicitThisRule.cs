@@ -2,12 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,7 +12,7 @@ using Microsoft.CodeAnalysis.Simplification;
 
 namespace Microsoft.DotNet.CodeFormatting.Rules
 {
-    [LocalSemanticRule(ExplicitThisRule.Name, ExplicitThisRule.Description, LocalSemanticRuleOrder.RemoveExplicitThisRule)]
+    [LocalSemanticRule(Name = ExplicitThisRule.Name, Description = ExplicitThisRule.Description, Order = LocalSemanticRuleOrder.RemoveExplicitThisRule)]
     internal sealed class ExplicitThisRule : CSharpOnlyFormattingRule, ILocalSemanticFormattingRule
     {
         internal const string Name = "ExplicitThis";
