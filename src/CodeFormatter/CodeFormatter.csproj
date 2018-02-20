@@ -8,6 +8,8 @@
     <RootNamespace>CodeFormatter</RootNamespace>
     <AssemblyName>CodeFormatter</AssemblyName>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <!-- Default configurations to help VS understand -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
@@ -36,7 +38,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.DotNet.CodeFormatting\Microsoft.DotNet.CodeFormatting.csproj">
@@ -46,37 +50,37 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis">
-      <Version>1.0.0</Version>
+      <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
-      <Version>1.0.0</Version>
+      <Version>2.6.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Common">
-      <Version>1.0.0</Version>
+      <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
-      <Version>1.0.0</Version>
+      <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces">
-      <Version>1.0.0</Version>
+      <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic">
-      <Version>1.0.0</Version>
+      <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces">
-      <Version>1.0.0</Version>
+      <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common">
-      <Version>1.0.0</Version>
+      <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Composition">
-      <Version>1.0.27</Version>
+      <Version>1.0.31</Version>
     </PackageReference>
     <PackageReference Include="System.Collections.Immutable">
-      <Version>1.1.36</Version>
+      <Version>1.4.0</Version>
     </PackageReference>
     <PackageReference Include="System.Reflection.Metadata">
-      <Version>1.0.21</Version>
+      <Version>1.5.0</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
