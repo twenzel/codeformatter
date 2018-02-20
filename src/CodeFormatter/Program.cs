@@ -55,34 +55,23 @@ namespace CodeFormatter
             return result;
         }
 
-        private static int RunListCommand(ListOptions options)
-        {
-            // If user did not explicitly reference either analyzers or
-            // rules in list command, we will dump both sets.
-            if (!options.Analyzers && !options.Rules)
+            var options = result.Options;
+            int exitCode;
+            switch (options.Operation)
             {
-                options.Analyzers = true;
-                options.Rules = true;
+                case Operation.ListRules:
+                    RunListRules();
+                    exitCode = 0;
+                    break;
+                case Operation.Format:
+                    exitCode = RunFormat(options);
+                    break;
+                default:
+                    throw new Exception("Invalid enum value: " + options.Operation);
             }
 
-            ListRulesAndAnalyzers(options.Analyzers, options.Rules);
-
-            return SUCCEEDED;
+            return 0;
         }
-
-        private static void ListRulesAndAnalyzers(bool listAnalyzers, bool listRules)
-        {
-            Console.WriteLine("{0,-20} {1}", "Name", "Title");
-            Console.WriteLine("==============================================");
-
-            if (listAnalyzers)
-            {
-                ImmutableArray<DiagnosticDescriptor> diagnosticDescriptors = FormattingEngine.GetSupportedDiagnostics(OptionsHelper.DefaultCompositionAssemblies);
-                foreach (var diagnosticDescriptor in diagnosticDescriptors)
-                {
-                    Console.WriteLine("{0,-20} :{1}", diagnosticDescriptor.Id, diagnosticDescriptor.Title);
-                }
-            }
 
             if (listRules)
             {

@@ -9,6 +9,8 @@
     <RootNamespace>Microsoft.DotNet.CodeFormatter.Analyzers.Tests</RootNamespace>
     <AssemblyName>Microsoft.DotNet.CodeFormatter.Analyzers.Tests</AssemblyName>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine, Version=2.0.273.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
