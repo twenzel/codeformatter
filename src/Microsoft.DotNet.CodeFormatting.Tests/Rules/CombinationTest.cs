@@ -350,6 +350,7 @@ namespace Microsoft.Build.UnitTests
     }
 }";
 
+            ToggleRule(UsingLocationRule.Name, true);
             Verify(source, expected);
         }
     }
