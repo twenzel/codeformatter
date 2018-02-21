@@ -55,23 +55,34 @@ namespace CodeFormatter
             return result;
         }
 
-            var options = result.Options;
-            int exitCode;
-            switch (options.Operation)
+        private static int RunListCommand(ListOptions options)
+        {
+            // If user did not explicitly reference either analyzers or
+            // rules in list command, we will dump both sets.
+            if (!options.Analyzers && !options.Rules)
             {
-                case Operation.ListRules:
-                    RunListRules();
-                    exitCode = 0;
-                    break;
-                case Operation.Format:
-                    exitCode = RunFormat(options);
-                    break;
-                default:
-                    throw new Exception("Invalid enum value: " + options.Operation);
+                options.Analyzers = true;
+                options.Rules = true;
             }
 
-            return 0;
+            ListRulesAndAnalyzers(options.Analyzers, options.Rules);
+
+            return SUCCEEDED;
         }
+
+        private static void ListRulesAndAnalyzers(bool listAnalyzers, bool listRules)
+        {
+            Console.WriteLine("{0,-20} {1}", "Name", "Title");
+            Console.WriteLine("==============================================");
+
+            if (listAnalyzers)
+            {
+                ImmutableArray<DiagnosticDescriptor> diagnosticDescriptors = FormattingEngine.GetSupportedDiagnostics(OptionsHelper.DefaultCompositionAssemblies);
+                foreach (var diagnosticDescriptor in diagnosticDescriptors)
+                {
+                    Console.WriteLine("{0,-20} :{1}", diagnosticDescriptor.Id, diagnosticDescriptor.Title);
+                }
+            }
 
             if (listRules)
             {
@@ -92,7 +103,8 @@ namespace CodeFormatter
             return RunCommand(options, true);
         }
 
-        private static int RunCommand(CommandLineOptions options, bool applyCodeFixes) { 
+        private static int RunCommand(CommandLineOptions options, bool applyCodeFixes)
+        {
             var cts = new CancellationTokenSource();
             var ct = cts.Token;
 
@@ -137,7 +149,7 @@ namespace CodeFormatter
             }
             return newAnalyzers;
         }
-            
+
         // Expects a list of paths to files or directories of DLLs containing analyzers and adds them to the engine
         internal static ImmutableArray<DiagnosticAnalyzer> AddCustomAnalyzers(IFormattingEngine engine, ImmutableArray<string> analyzerList)
         {
@@ -174,7 +186,7 @@ namespace CodeFormatter
             var engine = FormattingEngine.Create(assemblies);
 
             var configBuilder = ImmutableArray.CreateBuilder<string[]>();
-            configBuilder.Add(options.PreprocessorConfigurations.ToArray());            
+            configBuilder.Add(options.PreprocessorConfigurations.ToArray());
             engine.PreprocessorConfigurations = configBuilder.ToImmutableArray();
 
             engine.FormattingOptionsFilePath = options.OptionsFilePath;

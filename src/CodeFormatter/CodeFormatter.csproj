@@ -25,6 +25,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicAnalyzerAssemblyLoader.cs" />
+    <Compile Include="ExportOptions.cs" />
+    <Compile Include="FormatOptions.cs" />
+    <Compile Include="ListOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -48,6 +52,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommandLineParser">
+      <Version>2.2.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis">
       <Version>2.6.1</Version>
     </PackageReference>

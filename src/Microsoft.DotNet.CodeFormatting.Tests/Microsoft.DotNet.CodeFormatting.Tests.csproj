@@ -30,7 +30,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeFormattingTestBase.cs" />
-    <Compile Include="CommandLineParserTests.cs" />
+    <Compile Include="FormatOptionsParsingTests.cs" />
+    <Compile Include="PropertyBagTests.cs" />
     <Compile Include="Rules\BracesRuleTests.cs" />
     <Compile Include="Rules\CombinationTest.cs" />
     <Compile Include="Rules\CopyrightHeaderRuleTests.cs" />
@@ -42,6 +43,7 @@
     <Compile Include="Rules\NonAsciiCharactersAreEscapedInLiteralsRuleTests.cs" />
     <Compile Include="Rules\MarkReadonlyFieldTests.cs" />
     <Compile Include="Rules\UsingLocationRuleTests.cs" />
+    <Compile Include="RuleTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

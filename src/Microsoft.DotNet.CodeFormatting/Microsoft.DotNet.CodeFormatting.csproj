@@ -25,9 +25,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionalTextFile.cs" />
+    <Compile Include="DiagnosticAnalyzerExtensions.cs" />
+    <Compile Include="FormattingEngineDiagnosticProvider.cs" />
     <Compile Include="NameHelper.cs" />
+    <Compile Include="Options\IOptionsProvider.cs" />
+    <Compile Include="Options\PropertyBag.cs" />
+    <Compile Include="Options\PropertyBagExtensionMethods.cs" />
+    <Compile Include="Options\StringSet.cs" />
+    <Compile Include="Options\TypedPropertyBag.cs" />
     <Compile Include="ResponseFileWorkspace.cs" />
+    <Compile Include="Rules\FormatDocumentRule.cs" />
     <Compile Include="Rules\MarkReadonlyFieldsRule.cs" />
+    <Compile Include="Rules\RemoveCustomCopyrightRule.cs" />
+    <Compile Include="Rules\RemoveIllegalHeadersRule.cs" />
+    <Compile Include="Rules\RuleOptions.cs" />
+    <Compile Include="RuleType.cs" />
     <Compile Include="SemaphoreLock.cs" />
     <Compile Include="SyntaxUtil.cs" />
     <Compile Include="Filters\FilenameFilter.cs" />
@@ -56,14 +69,12 @@
     <Compile Include="Rules\ExplicitVisibilityRule.cs" />
     <Compile Include="Rules\CopyrightHeaderRule.cs" />
     <Compile Include="Rules\NewLineAboveRule.cs" />
-    <Compile Include="Rules\HasNoIllegalHeadersFormattingRule.cs" />
-    <Compile Include="Rules\HasNoCustomCopyrightHeaderFormattingRule.cs" />
     <Compile Include="Rules\PrivateFieldNamingRule.cs" />
     <Compile Include="Rules\UsingLocationRule.cs" />
-    <Compile Include="Rules\FormatDocumentFormattingRule.cs" />
     <Compile Include="Rules\NonAsciiCharactersAreEscapedInLiteralsRule.cs" />
     <Compile Include="Rules\ExplicitThisRule.cs" />
     <Compile Include="Rules\RuleOrder.cs" />
+    <Compile Include="UberCodeFixer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
