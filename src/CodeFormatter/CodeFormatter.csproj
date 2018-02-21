@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\build.props" />
   <PropertyGroup>
     <ProjectGuid>{B0E1A988-F762-459D-AD0D-56A3CF4FFF3F}</ProjectGuid>
@@ -15,6 +15,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
   <ItemGroup>
+    <Reference Include="Microsoft.Build" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -46,6 +47,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.DotNet.CodeFormatter.Analyzers\Microsoft.DotNet.CodeFormatter.Analyzers.csproj">
+      <Project>{496b91f4-478d-4388-ba6b-1d945e3e7497}</Project>
+      <Name>Microsoft.DotNet.CodeFormatter.Analyzers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Microsoft.DotNet.CodeFormatting\Microsoft.DotNet.CodeFormatting.csproj">
       <Project>{D535641F-A2D7-481C-930D-96C02F052B95}</Project>
       <Name>Microsoft.DotNet.CodeFormatting</Name>

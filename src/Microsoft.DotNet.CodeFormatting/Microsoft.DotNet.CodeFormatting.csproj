@@ -35,6 +35,8 @@
     <Compile Include="Options\StringSet.cs" />
     <Compile Include="Options\TypedPropertyBag.cs" />
     <Compile Include="ResponseFileWorkspace.cs" />
+    <Compile Include="Rules\AttributeNoParenthesesRule.cs" />
+    <Compile Include="Rules\AttributeSeparateListsRule.cs" />
     <Compile Include="Rules\FormatDocumentRule.cs" />
     <Compile Include="Rules\MarkReadonlyFieldsRule.cs" />
     <Compile Include="Rules\RemoveCustomCopyrightRule.cs" />

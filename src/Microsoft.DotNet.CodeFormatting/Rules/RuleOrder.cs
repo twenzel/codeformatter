@@ -30,5 +30,7 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
     {
         public const int PrivateFieldNamingRule = 1;
         public const int MarkReadonlyFieldsRule = 2;
+        public const int AttributeNoParenthesesRule = 3;
+        public const int AttributeSeparateListsRule = 4;
     }
 }
