@@ -19,6 +19,7 @@ using Microsoft.DotNet.CodeFormatter.Analyzers;
 using Microsoft.CodeAnalysis.Options;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace CodeFormatter
 {
@@ -223,7 +224,7 @@ namespace CodeFormatter
                     {
                         try
                         {
-                            await RunItemAsync(engine, target, options.Language, options.UseAnalyzers, cancellationToken);
+                            await RunItemAsync(engine, target, options.Language, options.UseAnalyzers, options.UseTabs, cancellationToken);
                         }
                         catch (Exception e)
                         {
@@ -233,7 +234,7 @@ namespace CodeFormatter
                 }
                 else
                 {
-                    await RunItemAsync(engine, item, options.Language, options.UseAnalyzers, cancellationToken);
+                    await RunItemAsync(engine, item, options.Language, options.UseAnalyzers, options.UseTabs, cancellationToken);
                 }
             }
 
@@ -245,6 +246,7 @@ namespace CodeFormatter
             string item,
             string language,
             bool useAnalyzers,
+            bool useTabs,
             CancellationToken cancellationToken)
         {
             Console.WriteLine(Path.GetFileName(item));
@@ -255,6 +257,7 @@ namespace CodeFormatter
                 {
                     using (var workspace = ResponseFileWorkspace.Create())
                     {
+                        ModifyWorkspaceOptions(workspace, language, useTabs);
                         Project project = workspace.OpenCommandLineProject(item, language);
                         await engine.FormatProjectAsync(project, useAnalyzers, cancellationToken);
                     }
@@ -263,6 +266,7 @@ namespace CodeFormatter
                 {
                     using (var workspace = MSBuildWorkspace.Create())
                     {
+                        ModifyWorkspaceOptions(workspace, language, useTabs);
                         workspace.LoadMetadataForReferencedProjects = true;
                         var solution = await workspace.OpenSolutionAsync(item, cancellationToken);
                         await engine.FormatSolutionAsync(solution, useAnalyzers, cancellationToken);
@@ -272,6 +276,7 @@ namespace CodeFormatter
                 {
                     using (var workspace = MSBuildWorkspace.Create())
                     {
+                        ModifyWorkspaceOptions(workspace, language, useTabs);
                         workspace.LoadMetadataForReferencedProjects = true;
                         var project = await workspace.OpenProjectAsync(item, cancellationToken);
                         await engine.FormatProjectAsync(project, useAnalyzers, cancellationToken);
@@ -283,6 +288,11 @@ namespace CodeFormatter
                 // Can occur if for example a Mono based project with unknown targets files is supplied
                 Console.WriteLine("Invalid project file in target {0}", item);
             }
+        }
+
+        private static void ModifyWorkspaceOptions(Workspace workspace, string language, bool useTabs)
+        {
+            workspace.Options = workspace.Options.WithChangedOption(FormattingOptions.UseTabs, language, useTabs);
         }
 
         private static bool SetRuleMap(IFormattingEngine engine, ImmutableDictionary<string, bool> ruleMap)

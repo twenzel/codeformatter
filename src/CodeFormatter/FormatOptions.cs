@@ -67,6 +67,11 @@ namespace CodeFormatter
         public bool UseAnalyzers { get; set; }
 
         [Option(
+            "use-tabs",
+            HelpText = "Use tabs for indentation instead of spaces.")]
+        public bool UseTabs { get; set; }
+
+        [Option(
             "analyzers",
             HelpText = "A path to an analyzer assembly or a file containing a newline separated list of analyzer assemblies to be run against the target source.")]
         public string TargetAnalyzers { get; set; }
@@ -103,7 +108,7 @@ namespace CodeFormatter
             {
                 return ImmutableArray.Create(targetAnalyzers);
             }
-            else if(StringComparer.OrdinalIgnoreCase.Equals(fileType, ".txt"))
+            else if (StringComparer.OrdinalIgnoreCase.Equals(fileType, ".txt"))
             {
                 ImmutableArray<string> analyzerText = new ImmutableArray<string>();
 
@@ -183,7 +188,7 @@ namespace CodeFormatter
 
     [Verb("format", HelpText = "Apply code formatting rules and analyzers to specified targets.")]
     internal class FormatOptions : CommandLineOptions
-    {       
+    {
         public override bool ApplyFixes { get { return true; } }
     }
 
