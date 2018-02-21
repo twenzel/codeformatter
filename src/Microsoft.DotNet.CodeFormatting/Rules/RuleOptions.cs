@@ -28,7 +28,9 @@ namespace Microsoft.DotNet.CodeFormatter.Analyzers
                 MarkReadonlyFieldsEnabled,
                 NewLineAboveEnabled,
                 UnicodeLiteralsEnabled,
-                UsingLocationEnabled
+                UsingLocationEnabled,
+                AttributeNoParenthesesEnabled,
+                AttributeSeparateListsEnabled
             }.ToImmutableArray();
         }
 
@@ -46,5 +48,7 @@ namespace Microsoft.DotNet.CodeFormatter.Analyzers
         public static PerLanguageOption<bool> NewLineAboveEnabled { get; } = new PerLanguageOption<bool>(_feature, NewLineAboveRule.Name + "." + "Enabled", defaultValue: true);
         public static PerLanguageOption<bool> UnicodeLiteralsEnabled { get; } = new PerLanguageOption<bool>(_feature, NonAsciiCharactersAreEscapedInLiterals.Name + "." + "Enabled", defaultValue: true);
         public static PerLanguageOption<bool> UsingLocationEnabled { get; } = new PerLanguageOption<bool>(_feature, UsingLocationRule.Name + "." + "Enabled", defaultValue: true);
+        public static PerLanguageOption<bool> AttributeNoParenthesesEnabled { get; } = new PerLanguageOption<bool>(_feature, AttributeNoParenthesesRule.Name + "." + "Enabled", defaultValue: true);
+        public static PerLanguageOption<bool> AttributeSeparateListsEnabled { get; } = new PerLanguageOption<bool>(_feature, AttributeSeparateListsRule.Name + "." + "Enabled", defaultValue: true);
     }
 }
