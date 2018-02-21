@@ -7,6 +7,10 @@ follow our coding styles, which are [documented here][corefx-coding-style].
 
 [corefx-coding-style]: https://github.com/dotnet/corefx/blob/master/Documentation/coding-guidelines/coding-style.md
 
+## Fork description
+
+This fork is a merge of the `master` and `anfix` branch, updated to the latest Roslyn NuGet packages. I added also some of the PRs.
+
 ## Prerequisites
 
 In order to build or run this tool you will need to have Microsoft Build Tools
