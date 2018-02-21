@@ -31,7 +31,8 @@ namespace Microsoft.DotNet.CodeFormatter.Analyzers
                 UsingLocationEnabled,
                 AttributeNoParenthesesEnabled,
                 AttributeSeparateListsEnabled,
-                LocalVariableNamingEnabled
+                LocalVariableNamingEnabled,
+                HasNoUnusedUsingsEnabled
             }.ToImmutableArray();
         }
 
@@ -52,5 +53,6 @@ namespace Microsoft.DotNet.CodeFormatter.Analyzers
         public static PerLanguageOption<bool> AttributeNoParenthesesEnabled { get; } = new PerLanguageOption<bool>(_feature, AttributeNoParenthesesRule.Name + "." + "Enabled", defaultValue: true);
         public static PerLanguageOption<bool> AttributeSeparateListsEnabled { get; } = new PerLanguageOption<bool>(_feature, AttributeSeparateListsRule.Name + "." + "Enabled", defaultValue: true);
         public static PerLanguageOption<bool> LocalVariableNamingEnabled { get; } = new PerLanguageOption<bool>(_feature, LocalVariableNamingRule.Name + "." + "Enabled", defaultValue: true);
+        public static PerLanguageOption<bool> HasNoUnusedUsingsEnabled { get; } = new PerLanguageOption<bool>(_feature, HasNoUnusedUsingsRule.Name + "." + "Enabled", defaultValue: true);
     }
 }

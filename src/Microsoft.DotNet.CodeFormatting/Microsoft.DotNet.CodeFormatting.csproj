@@ -28,6 +28,7 @@
     <Compile Include="AdditionalTextFile.cs" />
     <Compile Include="DiagnosticAnalyzerExtensions.cs" />
     <Compile Include="FormattingEngineDiagnosticProvider.cs" />
+    <Compile Include="Rules\HasNoUnusedUsingsRule.cs" />
     <Compile Include="Rules\LocalVariableNamingRule.VisualBasic.cs" />
     <Compile Include="NameHelper.cs" />
     <Compile Include="Options\IOptionsProvider.cs" />
