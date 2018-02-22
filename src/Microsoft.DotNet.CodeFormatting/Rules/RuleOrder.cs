@@ -34,5 +34,6 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
         public const int AttributeNoParenthesesRule = 3;
         public const int AttributeSeparateListsRule = 4;
         public const int LocalVariableNamingRule = 5;
+        public const int PrivateConstantFieldNamingRule = 6;
     }
 }

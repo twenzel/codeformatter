@@ -43,6 +43,7 @@
     <Compile Include="Rules\LocalVariableNamingRule.cs" />
     <Compile Include="Rules\LocalVariableNamingRule.CSharp.cs" />
     <Compile Include="Rules\MarkReadonlyFieldsRule.cs" />
+    <Compile Include="Rules\PrivateConstantFieldNamingRule.cs" />
     <Compile Include="Rules\RemoveCustomCopyrightRule.cs" />
     <Compile Include="Rules\RemoveIllegalHeadersRule.cs" />
     <Compile Include="Rules\RuleOptions.cs" />
@@ -110,6 +111,10 @@
     <PackageReference Include="System.Reflection.Metadata">
       <Version>1.4.2</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Rules\PrivateConstantFieldNamingRule.CSharp.cs" />
+    <Compile Include="Rules\PrivateConstantFieldNamingRule.VisualBasic.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
