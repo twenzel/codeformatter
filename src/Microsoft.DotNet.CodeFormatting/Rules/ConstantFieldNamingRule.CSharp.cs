@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.DotNet.CodeFormatting.Rules
 {
-    internal partial class PrivateConstantFieldNamingRule
+    internal partial class ConstantFieldNamingRule
     {
         private sealed class CSharpRule : CommonRule
         {
@@ -48,7 +48,7 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
                     {
                         var fieldName = v.Identifier.Text;
 
-                        if (IsGoodPrivateConstFieldName(fieldName))
+                        if (IsGoodConstantName(fieldName))
                         {
                             list.Add(v);
                         }
@@ -70,14 +70,14 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
 
             private static bool NeedsRewrite(FieldDeclarationSyntax fieldSyntax)
             {
-                if (!IsPrivateConstField(fieldSyntax))
+                if (!IsConstField(fieldSyntax))
                 {
                     return false;
                 }
 
                 foreach (var v in fieldSyntax.Declaration.Variables)
                 {
-                    if (!IsGoodPrivateConstFieldName(v.Identifier.ValueText))
+                    if (!IsGoodConstantName(v.Identifier.ValueText))
                     {
                         return true;
                     }
@@ -86,26 +86,20 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
                 return false;
             }
 
-            private static bool IsPrivateConstField(FieldDeclarationSyntax fieldSyntax)
-            {
-                var isPrivate = true;
+            private static bool IsConstField(FieldDeclarationSyntax fieldSyntax)
+            {            
                 var isConst = false;
                 foreach (var modifier in fieldSyntax.Modifiers)
                 {
                     switch (modifier.Kind())
-                    {
-                        case SyntaxKind.PublicKeyword:
-                        case SyntaxKind.InternalKeyword:
-                        case SyntaxKind.ProtectedKeyword:
-                            isPrivate = false;
-                            break;
+                    {                      
                         case SyntaxKind.ConstKeyword:
                             isConst = true;
                             break;
                     }
                 }
 
-                return isPrivate && isConst;
+                return isConst;
             }
         }
 

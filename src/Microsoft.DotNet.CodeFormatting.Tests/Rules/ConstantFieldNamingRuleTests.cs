@@ -8,14 +8,14 @@ using Xunit;
 
 namespace Microsoft.DotNet.CodeFormatting.Tests
 {
-    public class PrivateConstantFieldNamingRuleTests : GlobalSemanticRuleTestBase
+    public class ConstantFieldNamingRuleTests : GlobalSemanticRuleTestBase
     {
         internal override IGlobalSemanticFormattingRule Rule
         {
-            get { return new Rules.PrivateConstantFieldNamingRule(); }
+            get { return new Rules.ConstantFieldNamingRule(); }
         }
 
-        public sealed class CSharpFields : PrivateConstantFieldNamingRuleTests
+        public sealed class CSharpFields : ConstantFieldNamingRuleTests
         {
             [Fact]
             public void TestUpperCaseInPrivateConsts()
@@ -48,7 +48,7 @@ class T
     //
     private const string TT = ""dd"";
 
-    public const int otherconst = 5;
+    public const int OTHERCONST = 5;
 }";
                 Verify(text, expected);
             }
@@ -97,6 +97,38 @@ class C3
 class C4
 {
     private const int FIELD1 = 5;
+}
+";
+
+                Verify(text, expected, runFormatter: true);
+            }
+
+            [Fact]
+            public void DoNotRenameEnums()
+            {
+                var text = @"
+class C1
+{
+    private const int field1 = 1;
+}
+
+enum E1
+{
+    State1 = 0,
+    State2 = 1
+}
+";
+
+                var expected = @"
+class C1
+{
+    private const int FIELD1 = 1;
+}
+
+enum E1
+{
+    State1 = 0,
+    State2 = 1
 }
 ";
 
@@ -157,7 +189,7 @@ class C
             }
         }
 
-        public sealed class VisualBasicFields : PrivateConstantFieldNamingRuleTests
+        public sealed class VisualBasicFields : ConstantFieldNamingRuleTests
         {
             [Fact]
             public void Simple()
@@ -165,11 +197,13 @@ class C
                 var text = @"
 Class C 
     Private const Field As Integer = 5
+    Public const Field2 As Integer = 5
 End Class";
 
                 var expected = @"
 Class C 
     Private const FIELD As Integer = 5
+    Public const FIELD2 As Integer = 5
 End Class";
 
                 Verify(text, expected, runFormatter: false, languageName: LanguageNames.VisualBasic);

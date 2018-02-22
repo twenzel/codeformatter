@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Microsoft.DotNet.CodeFormatting.Rules
 {
-    [GlobalSemanticRule(Name = PrivateConstantFieldNamingRule.Name, Description = PrivateConstantFieldNamingRule.Description, Order = GlobalSemanticRuleOrder.PrivateConstantFieldNamingRule)]
-    internal partial class PrivateConstantFieldNamingRule : IGlobalSemanticFormattingRule
+    [GlobalSemanticRule(Name = ConstantFieldNamingRule.Name, Description = ConstantFieldNamingRule.Description, Order = GlobalSemanticRuleOrder.ConstantFieldNamingRule)]
+    internal partial class ConstantFieldNamingRule : IGlobalSemanticFormattingRule
     {
         internal const string Name = "ConstantFieldNames";
-        internal const string Description = "Make private constants upper case";
+        internal const string Description = "Make constants upper case";
 
         #region CommonRule
 
@@ -120,7 +120,7 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
         // Used to avoid the array allocation on calls to WithAdditionalAnnotations
         private readonly static SyntaxAnnotation[] s_markerAnnotationArray;
 
-        static PrivateConstantFieldNamingRule()
+        static ConstantFieldNamingRule()
         {
             s_markerAnnotationArray = new[] { s_markerAnnotation };
         }
@@ -148,7 +148,7 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
             }
         }
 
-        private static bool IsGoodPrivateConstFieldName(string name)
+        private static bool IsGoodConstantName(string name)
         {
             return name.Length > 0 && name.ToUpper() == name;
         }

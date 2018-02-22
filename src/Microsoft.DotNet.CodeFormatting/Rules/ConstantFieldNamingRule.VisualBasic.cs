@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace Microsoft.DotNet.CodeFormatting.Rules
 {
-    internal partial class PrivateConstantFieldNamingRule
+    internal partial class ConstantFieldNamingRule
     {
         private sealed class VisualBasicRule : CommonRule
         {
@@ -65,7 +65,7 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
                     foreach (var v in d.Names)
                     {
                         var local = v;
-                        if (!IsGoodPrivateConstFieldName(v.Identifier.ValueText))
+                        if (!IsGoodConstantName(v.Identifier.ValueText))
                         {
                             local = local.WithAdditionalAnnotations(s_markerAnnotationArray);
                             _count++;
@@ -82,7 +82,7 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
 
             private bool NeedsRewrite(FieldDeclarationSyntax fieldSyntax)
             {
-                if (!IsPrivateConstField(fieldSyntax))
+                if (!IsConstField(fieldSyntax))
                 {
                     return false;
                 }
@@ -91,7 +91,7 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
                 {
                     foreach (var v in d.Names)
                     {
-                        if (!IsGoodPrivateConstFieldName(v.Identifier.ValueText))
+                        if (!IsGoodConstantName(v.Identifier.ValueText))
                         {
                             return true;
                         }
@@ -101,27 +101,21 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
                 return false;
             }
 
-            private bool IsPrivateConstField(FieldDeclarationSyntax node)
+            private bool IsConstField(FieldDeclarationSyntax node)
             {
-                var isPrivate = true;
                 var isConst = false;
 
                 foreach (var modifier in node.Modifiers)
                 {
                     switch (modifier.Kind())
                     {
-                        case SyntaxKind.PublicKeyword:
-                        case SyntaxKind.FriendKeyword:
-                        case SyntaxKind.ProtectedKeyword:
-                            isPrivate = false;
-                            break;
                         case SyntaxKind.ConstKeyword:
                             isConst = true;
                             break;
                     }
                 }
 
-                return isPrivate && isConst;
+                return isConst;
             }
         }
 
