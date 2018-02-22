@@ -293,7 +293,7 @@ namespace Microsoft.DotNet.CodeFormatting
                 if (_compilationWithAnalyzers != null)
                 {
                     var extension = StringComparer.OrdinalIgnoreCase.Equals(project.Language, "C#") ? ".csproj" : ".vbproj";
-                    var resultFile = project.FilePath.Substring(project.FilePath.LastIndexOf(Path.DirectorySeparatorChar)).Replace(extension, "_CodeFormatterResults.txt");
+                    var resultFile = project.FilePath?.Substring(project.FilePath.LastIndexOf(Path.DirectorySeparatorChar)).Replace(extension, "_CodeFormatterResults.txt");
 
                     foreach (var analyzer in analyzers)
                     {

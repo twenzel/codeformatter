@@ -79,11 +79,11 @@ namespace Microsoft.DotNet.CodeFormatting.Tests
             }
         }
 
-        protected void Verify(string[] sources, string[] expected, bool runFormatter, string languageName)
+        protected async void Verify(string[] sources, string[] expected, bool runFormatter, string languageName)
         {
             var inputWorkspace = CreateWorkspace(sources, languageName);
             var expectedWorkspace = CreateWorkspace(expected, languageName);
-            var actualSolution = Format(inputWorkspace.CurrentSolution, runFormatter).Result;
+            var actualSolution = await Format(inputWorkspace.CurrentSolution, runFormatter);
 
             if (actualSolution == null)
                 Assert.False(true, "Solution is null. Test Failed.");
