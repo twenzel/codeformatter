@@ -292,7 +292,13 @@ namespace CodeFormatter
 
         private static void ModifyWorkspaceOptions(Workspace workspace, string language, bool useTabs)
         {
-            workspace.Options = workspace.Options.WithChangedOption(FormattingOptions.UseTabs, language, useTabs);
+            if (string.IsNullOrEmpty(language))
+            {
+                workspace.Options = workspace.Options.WithChangedOption(FormattingOptions.UseTabs, "C#", useTabs);
+                workspace.Options = workspace.Options.WithChangedOption(FormattingOptions.UseTabs, "Visual Basic", useTabs);
+            }
+            else
+                workspace.Options = workspace.Options.WithChangedOption(FormattingOptions.UseTabs, language, useTabs);
         }
 
         private static bool SetRuleMap(IFormattingEngine engine, ImmutableDictionary<string, bool> ruleMap)
