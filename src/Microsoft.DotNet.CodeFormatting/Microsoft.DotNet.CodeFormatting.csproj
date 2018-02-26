@@ -47,6 +47,9 @@
     <Compile Include="Rules\LocalVariableNamingRule.CSharp.cs" />
     <Compile Include="Rules\MarkReadonlyFieldsRule.cs" />
     <Compile Include="Rules\ConstantFieldNamingRule.cs" />
+    <Compile Include="Rules\ParametersNamingRule.cs" />
+    <Compile Include="Rules\ParametersNamingRule.CSharp.cs" />
+    <Compile Include="Rules\ParametersNamingRule.VisualBasic.cs" />
     <Compile Include="Rules\RemoveCustomCopyrightRule.cs" />
     <Compile Include="Rules\RemoveIllegalHeadersRule.cs" />
     <Compile Include="Rules\RuleOptions.cs" />

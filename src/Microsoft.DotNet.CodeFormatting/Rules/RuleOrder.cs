@@ -36,5 +36,6 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
         public const int LocalVariableNamingRule = 5;
         public const int ConstantFieldNamingRule = 6;
         public const int InterfaceNamingRule = 7;
+        public const int ParametersNamingRule = 8;
     }
 }
