@@ -58,13 +58,15 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
                     var declaration = root.GetAnnotatedNodes(s_markerAnnotation).ElementAt(i);
 
                     var parameterSymbol = semanticModel.GetDeclaredSymbol(declaration, cancellationToken);
+
+                    if (parameterSymbol == null)
+                        continue;
+
                     var newName = GetNewParameterName(parameterSymbol);
 
                     // Can happen with pathologically bad field names like _
                     if (newName == parameterSymbol.Name)
-                    {
                         continue;
-                    }
 
                     solution = await Renamer.RenameSymbolAsync(solution, parameterSymbol, newName, solution.Workspace.Options, cancellationToken).ConfigureAwait(false);
                     solution = await CleanSolutionAsync(solution, oldSolution, cancellationToken);

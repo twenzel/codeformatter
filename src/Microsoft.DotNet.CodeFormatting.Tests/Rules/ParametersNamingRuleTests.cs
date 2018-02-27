@@ -25,12 +25,16 @@ class A
 {
     public void TestA(int value) { }
     public void TestB(string valueTest, string other, string doNotRenameMe) { }
+
+    public delegate void TestEvent(int newValue);
 }";
                 var expected = @"
 class A
 {
     public void TestA(int value) { }
     public void TestB(string valueTest, string other, string doNotRenameMe) { }
+
+    public delegate void TestEvent(int newValue);
 }";
                 Verify(text, expected);
             }
@@ -44,6 +48,8 @@ class A
     public void TestA(int Value) { }
     public void TestB(string VALUE, string other, string RenameMe) { }
     public void TestC(string s_otherTest) { }
+
+    public delegate void TestEvent(int NewValue);
 }";
                 var expected = @"
 class A
@@ -51,6 +57,8 @@ class A
     public void TestA(int value) { }
     public void TestB(string value, string other, string renameMe) { }
     public void TestC(string otherTest) { }
+
+    public delegate void TestEvent(int newValue);
 }";
                 Verify(text, expected);
             }
@@ -68,6 +76,9 @@ Class A
 
     public Sub TestB(valueTest as string, other as string, doNotRenameMe as string)
     End Sub
+
+    Public Event OneStepMore(valNew as Integer)
+    Public Delegate Sub TestEvent(newVal As Integer)
 End Class";
 
                 var expected = @"
@@ -77,6 +88,9 @@ Class A
 
     public Sub TestB(valueTest as string, other as string, doNotRenameMe as string)
     End Sub
+
+    Public Event OneStepMore(valNew as Integer)
+    Public Delegate Sub TestEvent(newVal As Integer)
 End Class";
 
                 Verify(text, expected, runFormatter: false, languageName: LanguageNames.VisualBasic);
@@ -93,6 +107,9 @@ Class A
     End Sub
     public Sub TestA(s_otherTest as string)
     End Sub
+
+    Public Event OneStepMore(ValNew as Integer)
+    Public Delegate Sub TestEvent(NewVal As Integer)
 End Class";
 
                 var expected = @"
@@ -103,6 +120,9 @@ Class A
     End Sub
     public Sub TestA(otherTest as string)
     End Sub
+
+    Public Event OneStepMore(valNew as Integer)
+    Public Delegate Sub TestEvent(newVal As Integer)
 End Class";
 
                 Verify(text, expected, runFormatter: false, languageName: LanguageNames.VisualBasic);
