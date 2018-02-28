@@ -79,9 +79,9 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
             {
                 var name = fieldSymbol.Name;
 
-                // "x_XXX" -> "XXX"
+                // "s_value" -> "sValue"
                 if (name.Length > 2 && char.IsLetter(name[0]) && name[1] == '_')
-                    name = name.Substring(2);
+                    name = char.ToLower(name[0]).ToString() + char.ToUpper(name[2]) + name.Substring(3);
 
                 if (name.Length == 0)
                     return fieldSymbol.Name;

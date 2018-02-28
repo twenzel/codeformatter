@@ -56,9 +56,25 @@ class A
 {
     public void TestA(int value) { }
     public void TestB(string value, string other, string renameMe) { }
-    public void TestC(string otherTest) { }
+    public void TestC(string sOtherTest) { }
 
     public delegate void TestEvent(int newValue);
+}";
+                Verify(text, expected);
+            }
+
+            [Fact]
+            public void Rename_Critical()
+            {
+                var text = @"
+class A
+{
+    public void TestA(int v_Value, int b_Value) { }
+}";
+                var expected = @"
+class A
+{
+    public void TestA(int vValue, int bValue) { }
 }";
                 Verify(text, expected);
             }
@@ -70,28 +86,28 @@ class A
             public void DoNotRename()
             {
                 var text = @"
-Class A
-    public Sub TestA(value as Int)
-    End Sub
+    Class A
+        public Sub TestA(value as Int)
+        End Sub
 
-    public Sub TestB(valueTest as string, other as string, doNotRenameMe as string)
-    End Sub
+        public Sub TestB(valueTest as string, other as string, doNotRenameMe as string)
+        End Sub
 
-    Public Event OneStepMore(valNew as Integer)
-    Public Delegate Sub TestEvent(newVal As Integer)
-End Class";
+        Public Event OneStepMore(valNew as Integer)
+        Public Delegate Sub TestEvent(newVal As Integer)
+    End Class";
 
                 var expected = @"
-Class A
-    public Sub TestA(value as Int)
-    End Sub
+    Class A
+        public Sub TestA(value as Int)
+        End Sub
 
-    public Sub TestB(valueTest as string, other as string, doNotRenameMe as string)
-    End Sub
+        public Sub TestB(valueTest as string, other as string, doNotRenameMe as string)
+        End Sub
 
-    Public Event OneStepMore(valNew as Integer)
-    Public Delegate Sub TestEvent(newVal As Integer)
-End Class";
+        Public Event OneStepMore(valNew as Integer)
+        Public Delegate Sub TestEvent(newVal As Integer)
+    End Class";
 
                 Verify(text, expected, runFormatter: false, languageName: LanguageNames.VisualBasic);
             }
@@ -100,30 +116,30 @@ End Class";
             public void Rename()
             {
                 var text = @"
-Class A
-    public Sub TestA(Value as Int)
-    End Sub
-    public Sub TestB(VALUE as string, other as string, RenameMe as string)
-    End Sub
-    public Sub TestA(s_otherTest as string)
-    End Sub
+    Class A
+        public Sub TestA(Value as Int)
+        End Sub
+        public Sub TestB(VALUE as string, other as string, RenameMe as string)
+        End Sub
+        public Sub TestA(s_otherTest as string)
+        End Sub
 
-    Public Event OneStepMore(ValNew as Integer)
-    Public Delegate Sub TestEvent(NewVal As Integer)
-End Class";
+        Public Event OneStepMore(ValNew as Integer)
+        Public Delegate Sub TestEvent(NewVal As Integer)
+    End Class";
 
                 var expected = @"
-Class A
-    public Sub TestA(value as Int)
-    End Sub
-    public Sub TestB(value as string, other as string, renameMe as string)
-    End Sub
-    public Sub TestA(otherTest as string)
-    End Sub
+    Class A
+        public Sub TestA(value as Int)
+        End Sub
+        public Sub TestB(value as string, other as string, renameMe as string)
+        End Sub
+        public Sub TestA(sOtherTest as string)
+        End Sub
 
-    Public Event OneStepMore(valNew as Integer)
-    Public Delegate Sub TestEvent(newVal As Integer)
-End Class";
+        Public Event OneStepMore(valNew as Integer)
+        Public Delegate Sub TestEvent(newVal As Integer)
+    End Class";
 
                 Verify(text, expected, runFormatter: false, languageName: LanguageNames.VisualBasic);
             }
